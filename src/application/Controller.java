@@ -9,6 +9,8 @@ import javafx.stage.FileChooser;
 
 import java.io.File;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 import static application.RabinUtilsKt.*;
 
@@ -51,7 +53,12 @@ public class Controller {
     void onEncipherClick() {
         if (testFile()){
             if (checkValue(valueN.getText(), valueP.getText(), valueQ.getText(), valueB.getText())){
-                fileEncrypt(filePath, new BigInteger(valueN.getText()), new BigInteger(valueB.getText()));
+                StringBuilder input = new StringBuilder();
+                StringBuilder output = new StringBuilder();
+                fileEncrypt(filePath, new BigInteger(valueN.getText()), new BigInteger(valueB.getText()),
+                        input, output);
+                plainArea.setText(input.toString());
+                cipherArea.setText(output.toString());
             }else{
                 alert("Incorrect values");
             }

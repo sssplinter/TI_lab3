@@ -54,18 +54,26 @@ fun gcdWide(a: BigInteger, b: BigInteger): List<BigInteger> {
     return listOf(temp[0], temp[2], temp[1].subtract(a.divide(b).multiply(temp[2])))
 }
 
-fun fileEncrypt(fileName: String, N: BigInteger, B: BigInteger) {
+fun fileEncrypt(fileName: String, N: BigInteger, B: BigInteger, input: StringBuilder, outOut: StringBuilder) {
     val encryptedValues = mutableListOf<BigInteger>()
     val inStream = FileInputStream(fileName)
     val bytes = inStream.readAllBytes()
     inStream.close()
-    for (byte in bytes) {
-        val M = byte.toInt() + 128
+    for (i in bytes.indices) {
+        val M = bytes[i].toInt() + 128
+        if (i < 20){
+            input.append(M.toString())
+            input.append("\n")
+        }
         encryptedValues.add(encode(M.toBigInteger(), N, B))
     }
     val outStream = BufferedOutputStream(FileOutputStream(fileName) as OutputStream)
-    for (i in encryptedValues) {
-        outStream.write(i.toBytes(N.bitLength()))
+    for (i in encryptedValues.indices) {
+        if (i < 20){
+            outOut.append(encryptedValues[i].toString())
+            outOut.append("\n")
+        }
+        outStream.write(encryptedValues[i].toBytes(N.bitLength()))
     }
     outStream.close()
 }
