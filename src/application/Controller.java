@@ -69,8 +69,12 @@ public class Controller {
     void onDecipherClick() {
         if (testFile()){
             if (checkValue(valueP.getText(), valueQ.getText(), valueB.getText())){
+                StringBuilder input = new StringBuilder();
+                StringBuilder output = new StringBuilder();
                 fileDecrypt(filePath, new BigInteger(valueP.getText()), new BigInteger(valueQ.getText()),
-                        new BigInteger(valueB.getText()));
+                        new BigInteger(valueB.getText()), input, output);
+//                plainArea.setText(input.toString());
+                cipherArea.setText(output.toString());
             }else{
                 alert("Incorrect values");
             }

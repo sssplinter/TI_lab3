@@ -54,20 +54,22 @@ fun gcdWide(a: BigInteger, b: BigInteger): List<BigInteger> {
     return listOf(temp[0], temp[2], temp[1].subtract(a.divide(b).multiply(temp[2])))
 }
 
-fun fileEncrypt(fileName: String, N: BigInteger, B: BigInteger, input: StringBuilder, outOut: StringBuilder) {
+fun fileEncrypt( fileName: String, N: BigInteger, B: BigInteger, input: StringBuilder, outOut: StringBuilder) {
     val encryptedValues = mutableListOf<BigInteger>()
     val inStream = FileInputStream(fileName)
-    val bytes = inStream.readAllBytes()
+    val bytes = inStream.readBytes()
     inStream.close()
     for (i in bytes.indices) {
         val M = bytes[i].toInt() + 128
-        if (i < 20){
+//        if (i < 20){
             input.append(M.toString())
             input.append("\n")
-        }
-        encryptedValues.add(encode(M.toBigInteger(), N, B))
+//        }
+        val k = encode(M.toBigInteger(), N, B)
+        encryptedValues.add(k)
     }
-    val outStream = BufferedOutputStream(FileOutputStream(fileName) as OutputStream)
+    val f = "D://tests//lab1//result.txt"
+    val outStream = BufferedOutputStream(FileOutputStream(f) as OutputStream)
     for (i in encryptedValues.indices) {
         if (i < 20){
             outOut.append(encryptedValues[i].toString())
@@ -78,11 +80,11 @@ fun fileEncrypt(fileName: String, N: BigInteger, B: BigInteger, input: StringBui
     outStream.close()
 }
 
-fun fileDecrypt(fileName: String, P: BigInteger, Q: BigInteger, B: BigInteger) {
+fun fileDecrypt(fileName: String, P: BigInteger, Q: BigInteger, B: BigInteger, input: StringBuilder, outOut: StringBuilder) {
     val N = P * Q
     val blockSize = getBlockSize(N.bitLength())
     val inStream = FileInputStream(fileName)
-    val bytes = inStream.readAllBytes()
+    val bytes = inStream.readBytes()
     inStream.close()
     val blockCount = bytes.size / blockSize
     var k = 0
@@ -93,13 +95,15 @@ fun fileDecrypt(fileName: String, P: BigInteger, Q: BigInteger, B: BigInteger) {
         val block = ByteArray(blockSize)
         for (j in 0 until blockSize) {
             block[j] = bytes[k]
-            k++
+        k++
         }
         val C = BigInteger(block)
         val MM = decode(C, P, Q, B)
         for (s in MM) {
             if (s <= 255) {
                 resBytes.add((s - 128).toByte())
+                outOut.append(s)
+                outOut.append("\n")
             }
         }
     }

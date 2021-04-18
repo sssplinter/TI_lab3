@@ -8,7 +8,7 @@ fun Byte.toBigInteger(): BigInteger = this.toInt().toBigInteger()
 
 fun getBlockSize(bitCount: Int): Int{
     var byteCount = bitCount / 8
-    return if (byteCount * 8 < bitCount) byteCount + 1 else byteCount
+    return if (byteCount * 8 < bitCount) byteCount + 2 else byteCount + 1
 }
 
 fun BigInteger.toBytes(bitCount: Int): ByteArray{
