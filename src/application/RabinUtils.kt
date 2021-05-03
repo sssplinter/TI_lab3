@@ -92,6 +92,7 @@ fun fileDecrypt(fileName: String, P: BigInteger, Q: BigInteger, B: BigInteger, i
 
     val resBytes = mutableListOf<Byte>()
 
+    var count = 0
     for (i in 0 until blockCount) {
         val block = ByteArray(blockSize)
         for (j in 0 until blockSize) {
@@ -102,14 +103,19 @@ fun fileDecrypt(fileName: String, P: BigInteger, Q: BigInteger, B: BigInteger, i
         input.append(C)
         input.append("\n")
         val MM = decode(C, P, Q, B)
+
         for (s in MM) {
             if (s <= 255) {
+//                println("$(s - 128)")
+                count++
                 resBytes.add((s - 128).toByte())
                 outOut.append(s)
                 outOut.append("\n")
             }
         }
     }
+    println("Count: $count")
+    println("Block count: $blockCount")
     val outStream = FileOutputStream(fileName)
     outStream.write(resBytes.toByteArray())
     outStream.close()

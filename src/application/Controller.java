@@ -188,7 +188,7 @@ public class Controller {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setInitialDirectory(new File("."));
         fileChooser.setTitle("Select Some File");
-        fileChooser.setInitialDirectory(new File("D:\\tests\\test_lab2_TI"));
+//        fileChooser.setInitialDirectory(new File("D:\\tests\\test_lab2_TI"));
         File file = fileChooser.showOpenDialog(null);
         if (file != null) {
             return file.getPath();
