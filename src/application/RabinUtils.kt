@@ -1,6 +1,5 @@
 package application
 
-import com.sun.javafx.scene.control.behavior.TwoLevelFocusBehavior
 import java.io.BufferedOutputStream
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -58,11 +57,12 @@ fun gcdWide(a: BigInteger, b: BigInteger): List<BigInteger> {
 
 fun fileEncrypt(fileName: String, N: BigInteger, B: BigInteger, input: StringBuilder, outOut: StringBuilder) {
     val encryptedValues = mutableListOf<BigInteger>()
-    val inStream = FileInputStream(fileName)
+    val inStream =  FileInputStream(fileName)
     val bytes = inStream.readBytes()
+//    val bytes = Array<Byte>(256) { it.toByte()}
     inStream.close()
     for (i in bytes.indices) {
-        val M = bytes[i].toInt()
+        val M = bytes[i].toInt() + 128
         input.append(M.toString())
         input.append("\n")
         val k = encode(M.toBigInteger(), N, B)
@@ -81,20 +81,12 @@ fun fileEncrypt(fileName: String, N: BigInteger, B: BigInteger, input: StringBui
 }
 
 fun fileDecrypt(fileName: String, P: BigInteger, Q: BigInteger, B: BigInteger, input: StringBuilder, outOut: StringBuilder) {
-
-
-
     val N = P * Q
     val blockSize = getBlockSize(N.bitLength())
     val inStream = FileInputStream(fileName)
     val bytes = inStream.readBytes()
     inStream.close()
-    for (i in bytes.indices) {
-        val M = bytes[i].toInt()
-        input.append(M.toString())
-        input.append("\n")
 
-    }
     val blockCount = bytes.size / blockSize
     var k = 0
 
@@ -107,10 +99,12 @@ fun fileDecrypt(fileName: String, P: BigInteger, Q: BigInteger, B: BigInteger, i
             k++
         }
         val C = BigInteger(block)
+        input.append(C)
+        input.append("\n")
         val MM = decode(C, P, Q, B)
         for (s in MM) {
             if (s <= 255) {
-                resBytes.add((s).toByte())
+                resBytes.add((s - 128).toByte())
                 outOut.append(s)
                 outOut.append("\n")
             }
@@ -122,24 +116,8 @@ fun fileDecrypt(fileName: String, P: BigInteger, Q: BigInteger, B: BigInteger, i
 }
 
 fun checkPrivateKey(key: BigInteger): Boolean {
-
     return key % FOUR == THREE
 }
-
-//fun checkValue(P: String, Q: String, N: String, B: String): Boolean {
-//    if (P.isBlank() || Q.isBlank() || B.isBlank()) {
-//        return false
-//    }
-//
-//    try {
-//        val P = BigInteger(P)
-//        val Q = BigInteger(Q)
-//        val N = P * Q
-//        return checkValue(N.toString(), P.toString(), Q.toString(), B.toString())
-//    } catch (e: Exception) {
-//        return false
-//    }
-//}
 
 fun checkValue(N: String, P: String, Q: String, B: String): Int {
 
@@ -173,17 +151,6 @@ fun checkValue(N: String, P: String, Q: String, B: String): Int {
         return 9
     }
 }
-//
-//fun checkValue(P: String, Q: String): Int {
-//    val P = BigInteger(P)
-//    val Q = BigInteger(Q)
-//    if ((!checkPrivateKey(P)) || (!checkPrivateKey(Q))) {
-//        return 1
-//    }
-//    //todo простые
-//    return 0
-//
-//}
 
 fun generateB(N: BigInteger): BigInteger {
     val length = N.bitLength() - 1
