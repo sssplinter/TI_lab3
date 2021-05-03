@@ -14,11 +14,10 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("sample.fxml")));
         primaryStage.setTitle("Rabin");
-        primaryStage.setScene(new Scene(root, 740, 640));
+        primaryStage.setScene(new Scene(root, 1000, 900));
         primaryStage.setResizable(false);
         primaryStage.show();
     }
-
 
     public static void main(String[] args) {
         launch(args);
